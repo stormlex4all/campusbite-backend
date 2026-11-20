@@ -1,0 +1,50 @@
+{
+  "name": "campusbite-backend",
+  "version": "1.0.0",
+  "description": "CampusBite REST API: a surplus food marketplace for campus vendors and students (Node.js, Express, MongoDB). Serves the React web app and the React Native mobile app.",
+  "main": "src/server.js",
+  "private": true,
+  "engines": {
+    "node": ">=18.18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node scripts/seed.js",
+    "seed:demo": "node scripts/seed.js --demo",
+    "test": "./node_modules/.bin/jest --runInBand",
+    "test:unit": "./node_modules/.bin/jest tests/unit",
+    "test:integration": "./node_modules/.bin/jest --runInBand tests/integration"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/tests/setupEnv.js"
+    ],
+    "testTimeout": 60000
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.24.10",
+    "multer": "^2.5.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^7.2.1",
+    "eslint": "^10.15.0",
+    "eslint-plugin-jest": "^29.17.1",
+    "globals": "^17.14.0",
+    "jest": "^30.5.2",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.2"
+  }
+}
