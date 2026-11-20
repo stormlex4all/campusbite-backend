@@ -1,7 +1,7 @@
 # CampusBite – Node.js backend API
 
-REST API for **CampusBite**, a surplus-food marketplace for students of one college.
-It is the single backend for the **React web app** and **React Native (Expo) app** that will be built later, and can optionally serve the built React app itself.
+REST API for **CampusBite**, a surplus-food marketplace for students and vendors of Red Deer Polytechnic.
+It is the single backend for the **React web app** and **React Native (Expo) app** that will be completed later, and can optionally serve the built React app itself.
 
 > **Current scope (step 1 of the build): features 1, 2, 12 and 13 only** – accounts and roles, vendor store profiles, clear validation, and the admin panel. Listings, reservations, notifications, QR pickup and the vendor summary (features 3–11, 14) are added in later steps.
 
@@ -11,13 +11,12 @@ Stack: Node.js 22 · Express 4 · MongoDB (Mongoose 8) · Zod · JWT · Jest + S
 
 ```bash
 npm install
-cp .env.example .env        # then edit JWT_ACCESS_SECRET etc.
 npm run seed                # creates the first admin (ADMIN_EMAIL / ADMIN_PASSWORD)
 npm run seed:demo           # optional: two demo vendors and a student (password Password123!)
 npm run dev                 # http://localhost:4000/api/health
 ```
 
-You need a MongoDB: local `mongod`, Docker, or MongoDB Atlas (free tier works).
+You need a MongoDB: local `mongod`, Docker, or MongoDB Atlas (we will use Atlas for now).
 For multi-document transactions use a replica set (Atlas already is one; locally, a single-node replica set is enough).
 On a standalone `mongod` the API still works: stock is protected by atomic conditional updates with compensation. `USE_TRANSACTIONS=auto` detects which mode applies.
 
@@ -30,7 +29,7 @@ On a standalone `mongod` the API still works: stock is protected by atomic condi
 | `npm test` | all tests (needs MongoDB, see below) |
 | `npm run test:unit` | unit tests only, no database needed |
 
-Integration tests need a running MongoDB. Put its address in `TEST_MONGODB_URI` in your `.env` (default `mongodb://127.0.0.1:27017/`). Each test file creates and drops its own temporary database (`campusbite_test_*`) and ignores any database name in the URI, so your real data is never touched. Use a replica-set URI (e.g. `mongodb://127.0.0.1:27017/?replicaSet=rs0`) to also exercise transactions; a standalone server works too.
+Integration tests need a running MongoDB. Put its address in `TEST_MONGODB_URI`.
 
 ## Environment variables
 
@@ -45,7 +44,7 @@ See `.env.example` (every variable is documented there and validated at startup 
 { "success": false, "error": { "code": "SOLD_OUT", "message": "Sorry, this offer has sold out...", "details": [ { "field": "quantity", "message": "..." } ] } }
 ```
 
-Validation is enforced on the server for every request (`400 VALIDATION_ERROR` with per-field `details`). Client-side validation in React / React Native is only a convenience.
+Validation is enforced on the server for every request (`400 VALIDATION_ERROR` with per-field `details`).
 
 ## Authentication flow (web and mobile)
 
@@ -114,4 +113,4 @@ Layering: routes → validators → controller (HTTP only) → service (business
 ## Menu items, photos and listings
 
 * A **menu item** is a recurring product the vendor saves once (name, usual price, up to 4 photos). A **listing** is one offer for one pickup window. It is created from a menu item (name, description, price and photos are **copied**, so later edits never change an existing listing) or as a one-off.
-* Photos: stored on disk under `UPLOAD_DIR` with random names (`MAX_IMAGE_MB`, default 2 MB). The file type is read from the file's first bytes, not from its name or the browser's type. Storage sits behind `StorageFactory`, so a cloud driver can replace the local one. The per-item limit is enforced atomically in the database; a file whose database update fails is removed again. Removing a photo from a menu item keeps the file while a listing still uses it. EXIF metadata is not stripped yet.
+* Photos: stored on disk under `UPLOAD_DIR` with random names (`MAX_IMAGE_MB`, default 2 MB). The file type is read from the file's first bytes, not from its name or the browser's type. Storage sits behind `StorageFactory`, so a cloud driver can replace the local one. The per-item limit is enforced atomically in the database; a file whose database update fails is removed again. Removing a photo from a menu item keeps the file while a listing still uses it.
